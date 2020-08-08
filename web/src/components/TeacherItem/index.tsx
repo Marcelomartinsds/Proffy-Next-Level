@@ -3,32 +3,50 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css'
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id,
+        })
+    }
+
     return (
         <article className="teacher-item">
                     <header>
-                            <img src="https://pbs.twimg.com/profile_images/1290509194039373824/G2iq9X9q_400x400.jpg" alt="Marcelo Santos"/>
+                            <img src={teacher.avatar} alt={teacher.name}/>
                             <div>
-                            <strong>Marcelo Santos</strong>
-                            <span>Nutrição</span>
+                            <strong>{teacher.name}</strong>
+                            <span>{teacher.subject}</span>
                             </div>
                     </header>
 
-                    <p>
-                        Apaixonado por todos os benefícios de uma vida saudável graças a dieta e exercícios fisícos.
-                        <br/> <br/>
-                        Mostrando de forma clara e didática que a tese funciona na prática.
-                    </p>
+                    <p>{teacher.bio}</p>
 
                     <footer>
                         <p>
                             Preço/Hora
-                            <strong>R$ 45,00</strong>
+                            <strong>{teacher.cost}</strong>
                         </p>
-                        <button type="button"><img src={whatsappIcon} alt="whatsapp"/>
-                        Entrar em contato
-                        </button>
+                        <a target='_blank' onClick={createNewConnection} href={`http://wa.me/${teacher.whatsapp}`}>
+                            <img src={whatsappIcon} alt="whatsapp"/>
+                            Entrar em contato
+                        </a>                 
                     </footer>
                 </article>
     );
